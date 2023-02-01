@@ -32,13 +32,14 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
 
   final mapController = MapController();
+
   TextEditingController loc1 = TextEditingController();
   TextEditingController loc2 = TextEditingController();
+
   double loc1_long = 0;
   double loc1_lat = 0;
   double loc2_long = 0;
   double loc2_lat = 0;
-
 
   List<latLng.LatLng> routes = [];
 
@@ -124,13 +125,15 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: ElevatedButton(
                           onPressed: () {
                             setState(() {
-                              getRoute("http://router.project-osrm.org/route/v1/driving/${loc1.text};${loc2.text}?geometries=geojson");
-
                               loc1_long = double.parse(loc1.text.replaceAll(RegExp(r',(?<=,).*'),''));
                               loc1_lat = double.parse(loc1.text.replaceAll(RegExp(r'.*(?=,),'),''));
 
                               loc2_long = double.parse(loc2.text.replaceAll(RegExp(r',(?<=,).*'),''));
                               loc2_lat =double.parse(loc2.text.replaceAll(RegExp(r'.*(?=,),'),''));
+
+                              getRoute("http://router.project-osrm.org/route/v1/driving/"
+                                  "${loc1_long},${loc1_lat};"
+                                  "${loc2_long},${loc2_lat}?geometries=geojson");
                             });
                           },
                           child: const Text("Search Route"))
