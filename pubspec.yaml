@@ -38,10 +38,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter_map: ^3.1.0
   latlong: any
-  flutter_mapbox_navigation: ^0.0.26
-  routing_client_dart: ^0.3.1
-  flutter_mapbox_autocomplete: ^2.0.0
-  mapbox_search: ^3.0.1+2
+  flutter_map_geojson: ^1.0.1
+  geojson: ^1.0.0
 
 dev_dependencies:
   flutter_test:
@@ -65,10 +63,8 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
-  # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/bulking_smart.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

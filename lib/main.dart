@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import "package:latlong2/latlong.dart" as latLng;
 import 'package:http/http.dart' as http;
+import 'package:flutter_map_geojson/flutter_map_geojson.dart';
+import 'package:geojson/geojson.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 import 'dart:async';
 import 'dart:convert' as convert;
@@ -32,6 +35,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
 
   final mapController = MapController();
+  GeoJsonParser myGeoJson = GeoJsonParser();
 
   TextEditingController loc1 = TextEditingController();
   TextEditingController loc2 = TextEditingController();
@@ -42,10 +46,12 @@ class _MyHomePageState extends State<MyHomePage> {
   double loc2_lat = 0;
 
   List<latLng.LatLng> routes = [];
+  final List<Polyline>lines = [];
 
   @override
   void initState() {
     super.initState();
+    parseAndDrawAssetsOnMap();
   }
 
   Future getRoute(url) async{
@@ -68,6 +74,22 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  Future<void> parseAndDrawAssetsOnMap() async {
+    final geo = GeoJson();
+    geo.processedLines.listen((GeoJsonLine line) {
+      /// when a line is parsed add it to the map right away
+      setState(() => lines.add(Polyline(
+          strokeWidth: 2.0,
+          color: Colors.blue,
+          points: line.geoSerie!.toLatLng()))
+      );
+    });
+    geo.endSignal.listen((_) => geo.dispose());
+    final data = await rootBundle
+        .loadString('assets/bulking_smart.json');
+    await geo.parse(data, verbose: true);
+  }
+
 //   @override
   @override
   Widget build(BuildContext context) {
@@ -80,7 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: FlutterMap(
         options: MapOptions(
-          center: latLng.LatLng(-6.210588,106.822275),
+          center: latLng.LatLng(-2.74396599,112.91324255999999),
           zoom: 13.0,
         ),
         mapController: mapController,
@@ -134,7 +156,14 @@ class _MyHomePageState extends State<MyHomePage> {
                               getRoute("http://router.project-osrm.org/route/v1/driving/"
                                   "${loc1_long},${loc1_lat};"
                                   "${loc2_long},${loc2_lat}?geometries=geojson");
+
+                              lines.add(Polyline(
+                                  points: routes,
+                                  color: Colors.blue,
+                                  strokeWidth: 4.0
+                              ));
                             });
+
                           },
                           child: const Text("Search Route"))
                   ),
@@ -155,13 +184,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           PolylineLayer(
               polylineCulling: false,
-              polylines: [
-              Polyline(
-                  points: routes,
-                  color: Colors.blue,
-                  strokeWidth: 4.0
-              )
-          ]
+              polylines: lines
           ),
           MarkerLayer(
             markers: [

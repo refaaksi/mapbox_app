@@ -57,13 +57,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.5"
-  dio:
+  extra_pedantic:
     dependency: transitive
     description:
-      name: dio
+      name: extra_pedantic
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.6"
+    version: "1.5.0"
   fake_async:
     dependency: transitive
     description:
@@ -90,25 +90,39 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.1.0"
-  flutter_mapbox_autocomplete:
+  flutter_map_geojson:
     dependency: "direct main"
     description:
-      name: flutter_mapbox_autocomplete
+      name: flutter_map_geojson
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0"
-  flutter_mapbox_navigation:
-    dependency: "direct main"
-    description:
-      name: flutter_mapbox_navigation
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.26"
+    version: "1.0.1"
   flutter_test:
     dependency: "direct dev"
     description: flutter
     source: sdk
     version: "0.0.0"
+  geodesy:
+    dependency: transitive
+    description:
+      name: geodesy
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.4.0-nullsafety.0"
+  geojson:
+    dependency: "direct main"
+    description:
+      name: geojson
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
+  geopoint:
+    dependency: transitive
+    description:
+      name: geopoint
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   http:
     dependency: transitive
     description:
@@ -130,6 +144,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.18.0"
+  iso:
+    dependency: transitive
+    description:
+      name: iso
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   latlong:
     dependency: "direct main"
     description:
@@ -165,13 +186,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.11.4"
-  mapbox_search:
-    dependency: "direct main"
-    description:
-      name: mapbox_search
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.0.1+2"
   matcher:
     dependency: transitive
     description:
@@ -207,6 +221,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.2"
+  pedantic:
+    dependency: transitive
+    description:
+      name: pedantic
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.11.1"
   polylabel:
     dependency: transitive
     description:
@@ -228,18 +249,18 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
-  routing_client_dart:
-    dependency: "direct main"
-    description:
-      name: routing_client_dart
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.3.1"
   sky_engine:
     dependency: transitive
     description: flutter
     source: sdk
     version: "0.0.99"
+  slugify:
+    dependency: transitive
+    description:
+      name: slugify
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
   source_span:
     dependency: transitive
     description:
