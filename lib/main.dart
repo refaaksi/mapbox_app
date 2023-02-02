@@ -3,8 +3,8 @@ import 'package:flutter_map/flutter_map.dart';
 import "package:latlong2/latlong.dart" as latLng;
 import 'package:http/http.dart' as http;
 import 'package:flutter_map_geojson/flutter_map_geojson.dart';
-import 'package:geojson/geojson.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'dart:convert';
 
 import 'dart:async';
 import 'dart:convert' as convert;
@@ -35,10 +35,9 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
 
   final mapController = MapController();
-  GeoJsonParser myGeoJson = GeoJsonParser();
-
   TextEditingController loc1 = TextEditingController();
   TextEditingController loc2 = TextEditingController();
+  GeoJsonParser myGeoJson = GeoJsonParser();
 
   double loc1_long = 0;
   double loc1_lat = 0;
@@ -46,13 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
   double loc2_lat = 0;
 
   List<latLng.LatLng> routes = [];
-  final List<Polyline>lines = [];
-
-  @override
-  void initState() {
-    super.initState();
-    parseAndDrawAssetsOnMap();
-  }
+  List<Polygon>lines=[];
 
   Future getRoute(url) async{
     List<latLng.LatLng> route_list = [];
@@ -74,23 +67,20 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  Future<void> parseAndDrawAssetsOnMap() async {
-    final geo = GeoJson();
-    geo.processedLines.listen((GeoJsonLine line) {
-      /// when a line is parsed add it to the map right away
-      setState(() => lines.add(Polyline(
-          strokeWidth: 2.0,
-          color: Colors.blue,
-          points: line.geoSerie!.toLatLng()))
-      );
+  Future<void> readJson() async {
+    final String response = await rootBundle.loadString('lib/assets/bulking_smart.json');
+    myGeoJson.parseGeoJsonAsString(response);
+    setState(() {
+      lines = myGeoJson.polygons;
     });
-    geo.endSignal.listen((_) => geo.dispose());
-    final data = await rootBundle
-        .loadString('assets/bulking_smart.json');
-    await geo.parse(data, verbose: true);
   }
 
-//   @override
+  @override
+  void initState() {
+    super.initState();
+    readJson();
+  }
+
   @override
   Widget build(BuildContext context) {
     double height_pct = MediaQuery.of(context).size.height;
@@ -147,23 +137,17 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: ElevatedButton(
                           onPressed: () {
                             setState(() {
-                              loc1_long = double.parse(loc1.text.replaceAll(RegExp(r',(?<=,).*'),''));
-                              loc1_lat = double.parse(loc1.text.replaceAll(RegExp(r'.*(?=,),'),''));
+                              loc1_long = double.parse(loc1.text.trim().replaceAll(RegExp(r',(?<=,).*'),''));
+                              loc1_lat = double.parse(loc1.text.trim().replaceAll(RegExp(r'.*(?=,),'),''));
 
-                              loc2_long = double.parse(loc2.text.replaceAll(RegExp(r',(?<=,).*'),''));
-                              loc2_lat =double.parse(loc2.text.replaceAll(RegExp(r'.*(?=,),'),''));
+                              loc2_long = double.parse(loc2.text.trim().replaceAll(RegExp(r',(?<=,).*'),''));
+                              loc2_lat =double.parse(loc2.text.trim().replaceAll(RegExp(r'.*(?=,),'),''));
 
                               getRoute("http://router.project-osrm.org/route/v1/driving/"
                                   "${loc1_long},${loc1_lat};"
                                   "${loc2_long},${loc2_lat}?geometries=geojson");
 
-                              lines.add(Polyline(
-                                  points: routes,
-                                  color: Colors.blue,
-                                  strokeWidth: 4.0
-                              ));
                             });
-
                           },
                           child: const Text("Search Route"))
                   ),
@@ -183,8 +167,18 @@ class _MyHomePageState extends State<MyHomePage> {
               subdomains: ['a', 'b', 'c']
           ),
           PolylineLayer(
-              polylineCulling: false,
-              polylines: lines
+            polylineCulling: false,
+            polylines: [
+              Polyline(
+                points: routes,
+                color: Colors.blue,
+                strokeWidth: 4.0
+            )
+            ],
+          ),
+          PolygonLayer(
+              polygonCulling: false,
+              polygons: lines,
           ),
           MarkerLayer(
             markers: [
